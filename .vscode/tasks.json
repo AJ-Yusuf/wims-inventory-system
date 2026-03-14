@@ -1,0 +1,26 @@
+{
+    "version": "2.0.0",
+    "tasks": [
+        {
+            "label": "Build WIMS",
+            "type": "shell",
+            "command": "g++",
+            "args": [
+                "-std=c++17",
+                "-o", "${workspaceFolder}/SRC/wims",
+                "${workspaceFolder}/SRC/main.cpp",
+                "${workspaceFolder}/SRC/Product.cpp",
+                "${workspaceFolder}/SRC/Order.cpp",
+                "${workspaceFolder}/SRC/Person.cpp",
+                "${workspaceFolder}/SRC/Manager.cpp",
+                "${workspaceFolder}/SRC/Employee.cpp",
+                "${workspaceFolder}/SRC/InventorySystem.cpp"
+            ],
+            "group": {
+                "kind": "build",
+                "isDefault": true
+            },
+            "problemMatcher": ["$gcc"]
+        }
+    ]
+}
