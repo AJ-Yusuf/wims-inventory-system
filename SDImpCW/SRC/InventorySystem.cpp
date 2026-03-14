@@ -1,7 +1,9 @@
 #include "InventorySystem.h"
 using namespace std;
 
+// ─────────────────────────────────────────
 //  Constructor and Destructor
+// ─────────────────────────────────────────
 InventorySystem::InventorySystem() {
     currentUser = nullptr;
     loadUsers();
@@ -14,11 +16,14 @@ InventorySystem::~InventorySystem() {
         delete users[i];
 }
 
+// ─────────────────────────────────────────
 //  Run
+// ─────────────────────────────────────────
 void InventorySystem::run() {
     cout << "\n========================================" << endl;
     cout << "  Warehouse Inventory Management System  " << endl;
     cout << "========================================" << endl;
+
 
     while (true) {
         currentUser = login();
@@ -33,10 +38,12 @@ void InventorySystem::run() {
     }
 }
 
-
+// ─────────────────────────────────────────
 //  Login
+// ─────────────────────────────────────────
 Person* InventorySystem::login() {
     cout << "\n--- LOGIN ---" << endl;
+    cout << endl;
     cout << "Enter ID (or 'quit' to exit): ";
     string id;
     getline(cin, id);
@@ -59,9 +66,9 @@ Person* InventorySystem::login() {
     return login();
 }
 
-
-
+// ─────────────────────────────────────────
 //  Manager Loop
+// ─────────────────────────────────────────
 void InventorySystem::managerLoop() {
     string input;
     int choice;
@@ -94,8 +101,9 @@ void InventorySystem::managerLoop() {
     } while (choice != 0);
 }
 
-
+// ─────────────────────────────────────────
 //  Employee Loop
+// ─────────────────────────────────────────
 void InventorySystem::employeeLoop() {
     string input;
     int choice;
@@ -117,6 +125,140 @@ void InventorySystem::employeeLoop() {
         else cout << "Unknown option." << endl;
     } while (choice != 0);
 }
+
+// ─────────────────────────────────────────
+//  Manager — Products
+// ─────────────────────────────────────────
+void InventorySystem::addProduct() {
+    cout << "\n-- Add Product --" << endl;
+    cout << endl;
+    string id, name, location, qstr, pstr;
+    cout << "Product ID : "; getline(cin, id);       id = trim(id);
+    cout << "Name       : "; getline(cin, name);     name = trim(name);
+    cout << "Location   : "; getline(cin, location); location = trim(location);
+    cout << "Quantity   : "; getline(cin, qstr);
+    cout << "Price      : "; getline(cin, pstr);
+
+    if (id.empty() || productIdExists(id)) {
+        cout << "Error: ID is empty or already exists." << endl; return;
+    }
+    try {
+        products.push_back(Product(id, name, stoi(qstr), location, stod(pstr)));
+        cout << "Product added successfully." << endl;
+    } catch (exception& e) {
+        cout << "Error: " << e.what() << endl;
+    }
+}
+
+void InventorySystem::viewProducts() {
+    if (products.empty()) { cout << "No products in inventory." << endl; return; }
+    cout << "\n-- All Products --" << endl;
+    cout << string(60, '-') << endl;
+
+    sort(products.begin(), products.end(), [](Product a, Product b) {
+        return a.getName() < b.getName();
+    });
+
+    for (int i = 0; i < products.size(); i++) {
+        products[i].display();
+        cout << string(60, '-') << endl;
+    }
+}
+
+void InventorySystem::editProduct() {
+    cout << "\n-- Edit Product --" << endl;
+    cout << "Product ID to edit: ";
+    string id; getline(cin, id); id = trim(id);
+    Product* p = findProductById(id);
+    if (!p) { cout << "Product not found." << endl; return; }
+
+    cout << "Edit (1=Name, 2=Quantity, 3=Location, 4=Price): ";
+    string c; getline(cin, c);
+    try {
+        if (c == "1") {
+            cout << "New Name: "; string v; getline(cin, v); p->setName(trim(v));
+        } else if (c == "2") {
+            cout << "New Quantity: "; string v; getline(cin, v); p->setQuantity(stoi(v));
+        } else if (c == "3") {
+            cout << "New Location: "; string v; getline(cin, v); p->setLocation(trim(v));
+        } else if (c == "4") {
+            cout << "New Price: "; string v; getline(cin, v); p->setPrice(stod(v));
+        } else {
+            cout << "Invalid choice." << endl; return;
+        }
+        cout << "Product updated." << endl;
+    } catch (exception& e) {
+        cout << "Error: " << e.what() << endl;
+    }
+}
+
+void InventorySystem::deleteProduct() {
+    cout << "\n-- Delete Product --" << endl;
+    cout << "Product ID to delete: ";
+    string id; getline(cin, id); id = trim(id);
+    for (int i = 0; i < products.size(); i++) {
+        if (products[i].getProductId() == id) {
+            products.erase(products.begin() + i);
+            cout << "Product deleted." << endl;
+            return;
+        }
+    }
+    cout << "Product not found." << endl;
+}
+
+// ─────────────────────────────────────────
+//  Manager — Employees
+// ─────────────────────────────────────────
+void InventorySystem::addEmployee() {
+    cout << "\n-- Add Employee --" << endl;
+    string id, name, pw;
+    cout << "Employee ID : "; getline(cin, id);   id = trim(id);
+    cout << "Name        : "; getline(cin, name); name = trim(name);
+    cout << "Password    : "; getline(cin, pw);   pw = trim(pw);
+
+    if (id.empty() || userIdExists(id)) {
+        cout << "Error: ID is empty or already exists." << endl; return;
+    }
+    if (name.empty() || pw.empty()) {
+        cout << "Error: Name and password cannot be empty." << endl; return;
+    }
+    users.push_back(new Employee(name, id, pw));
+    cout << "Employee added successfully." << endl;
+}
+
+void InventorySystem::viewEmployees() {
+    cout << "\n-- All Employees --" << endl;
+    bool found = false;
+    for (int i = 0; i < users.size(); i++) {
+        if (users[i]->getRole() == "EMPLOYEE") {
+            cout << "  ID: " << users[i]->getId()
+                 << "  Name: " << users[i]->getName() << endl;
+            found = true;
+        }
+    }
+    if (!found) cout << "No employees found." << endl;
+}
+
+void InventorySystem::editEmployee() {
+    cout << "\n-- Edit Employee --" << endl;
+    cout << "Employee ID to edit: ";
+    string id; getline(cin, id); id = trim(id);
+    Person* p = findUserById(id);
+    if (!p || p->getRole() != "EMPLOYEE") {
+        cout << "Employee not found." << endl; return;
+    }
+    cout << "Edit (1=Name, 2=Password): ";
+    string c; getline(cin, c);
+    if (c == "1") {
+        cout << "New Name: "; string v; getline(cin, v); p->setName(trim(v));
+    } else if (c == "2") {
+        cout << "New Password: "; string v; getline(cin, v); p->setPassword(trim(v));
+    } else {
+        cout << "Invalid choice." << endl; return;
+    }
+    cout << "Employee updated." << endl;
+}
+
 // ─────────────────────────────────────────
 //  Manager — Orders
 // ─────────────────────────────────────────
@@ -295,7 +437,6 @@ void InventorySystem::completeOrder() {
         cout << "Order already completed." << endl; return;
     }
 
-    // Check stock first
     map<string, int> items = o->getItems();
     for (auto it = items.begin(); it != items.end(); it++) {
         Product* p = findProductById(it->first);
@@ -307,7 +448,6 @@ void InventorySystem::completeOrder() {
         }
     }
 
-    // All good — deduct stock
     for (auto it = items.begin(); it != items.end(); it++) {
         findProductById(it->first)->reduceQuantity(it->second);
     }
@@ -327,6 +467,7 @@ void InventorySystem::generateMyReport() {
     f.close();
     cout << "Report saved to: " << filename << endl;
 }
+
 // ─────────────────────────────────────────
 //  File Loading
 // ─────────────────────────────────────────
@@ -334,7 +475,7 @@ void InventorySystem::loadUsers() {
     ifstream f(USERS_FILE);
     if (!f.is_open()) return;
     string line;
-    getline(f, line); // skip header
+    getline(f, line);
     while (getline(f, line)) {
         if (line.empty()) continue;
         istringstream ss(line);
@@ -355,7 +496,7 @@ void InventorySystem::loadProducts() {
     ifstream f(PRODUCTS_FILE);
     if (!f.is_open()) return;
     string line;
-    getline(f, line); // skip header
+    getline(f, line);
     while (getline(f, line)) {
         if (line.empty()) continue;
         istringstream ss(line);
@@ -376,7 +517,7 @@ void InventorySystem::loadOrders() {
     ifstream f(ORDERS_FILE);
     if (!f.is_open()) return;
     string line;
-    getline(f, line); // skip header
+    getline(f, line);
     while (getline(f, line)) {
         if (line.empty()) continue;
         istringstream ss(line);
@@ -391,7 +532,6 @@ void InventorySystem::loadOrders() {
         if (!trim(empId).empty())
             o.setAssignedEmployee(trim(empId));
 
-        // parse items: prodId:qty;prodId:qty
         istringstream itemStream(itemsStr);
         string token;
         while (getline(itemStream, token, ';')) {
@@ -403,7 +543,6 @@ void InventorySystem::loadOrders() {
             }
         }
 
-        // restore correct status
         statusStr = trim(statusStr);
         if (statusStr == "ASSIGNED")       o.setStatus(ASSIGNED);
         else if (statusStr == "COMPLETED") o.setStatus(COMPLETED);

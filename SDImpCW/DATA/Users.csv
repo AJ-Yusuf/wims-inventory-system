@@ -1,3 +1,4 @@
 ID,Name,Password,Role
-MGR001,Sarah,manager123,MANAGER
+MGR001,Ayuba,manager123,MANAGER
 EMP001,David,employee123,EMPLOYEE
+EMP002,Tenski,aaa,EMPLOYEE
