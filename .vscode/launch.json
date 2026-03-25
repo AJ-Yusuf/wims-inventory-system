@@ -3,5 +3,20 @@
     // Hover to view descriptions of existing attributes.
     // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
     "version": "0.2.0",
-    "configurations": []
+    "configurations": [
+        {
+            "name": "Run WIMS",
+            "type": "cppdbg",
+            "request": "launch",
+            "program": "${workspaceFolder}/SDImpCW/SRC/wims",
+            "args": [],
+            "stopAtEntry": false,
+            "cwd": "${workspaceFolder}/SDImpCW",
+            "environment": [],
+            "externalConsole": true,
+            "MIMode": "lldb",
+            "preLaunchTask": "Build WIMS"
+        }
+
+    ]
 }
