@@ -1,4 +1,5 @@
 ID,Name,Password,Role
-MGR001,Ayuba,manager123,MANAGER
+MGR001,Ayuba,aaa,MANAGER
 EMP001,David,employee123,EMPLOYEE
 EMP002,Tenski,aaa,EMPLOYEE
+EMP003,John,aaa,EMPLOYEE

@@ -57,6 +57,7 @@ Person* InventorySystem::login() {
 
     for (int i = 0; i < users.size(); i++) {
         if (users[i]->getId() == id && users[i]->getPassword() == pw) {
+            cout << endl;
             cout << "Welcome, " << users[i]->getName()
                  << "! (" << users[i]->getRole() << ")" << endl;
             return users[i];
@@ -130,10 +131,15 @@ void InventorySystem::employeeLoop() {
 //  Manager — Products
 // ─────────────────────────────────────────
 void InventorySystem::addProduct() {
-    cout << "\n-- Add Product --" << endl;
+    cout << "\n----- Add Product -----" << endl;
+    cout << endl;
+    cout << "Type in th edetails of the product to add" << endl;
+    cout << endl;
+    cout << "(Enter 0 to return to menu)" << endl;
     cout << endl;
     string id, name, location, qstr, pstr;
     cout << "Product ID : "; getline(cin, id);       id = trim(id);
+    if (id == "0") return;
     cout << "Name       : "; getline(cin, name);     name = trim(name);
     cout << "Location   : "; getline(cin, location); location = trim(location);
     cout << "Quantity   : "; getline(cin, qstr);
@@ -163,29 +169,38 @@ void InventorySystem::viewProducts() {
         products[i].display();
         cout << string(60, '-') << endl;
     }
+    cout << "\n(Enter 0 to return to menu): ";
+    string input; getline(cin, input);
 }
 
 void InventorySystem::editProduct() {
     cout << "\n-- Edit Product --" << endl;
+    cout << "(Enter 0 to return to menu)" << endl;
     cout << "Product ID to edit: ";
     string id; getline(cin, id); id = trim(id);
+    if (id == "0") return;
     Product* p = findProductById(id);
     if (!p) { cout << "Product not found." << endl; return; }
 
-    cout << "Edit (1=Name, 2=Quantity, 3=Location, 4=Price): ";
-    string c; getline(cin, c);
+    cout << "(Press Enter to keep current value)" << endl;
+    string v;
     try {
-        if (c == "1") {
-            cout << "New Name: "; string v; getline(cin, v); p->setName(trim(v));
-        } else if (c == "2") {
-            cout << "New Quantity: "; string v; getline(cin, v); p->setQuantity(stoi(v));
-        } else if (c == "3") {
-            cout << "New Location: "; string v; getline(cin, v); p->setLocation(trim(v));
-        } else if (c == "4") {
-            cout << "New Price: "; string v; getline(cin, v); p->setPrice(stod(v));
-        } else {
-            cout << "Invalid choice." << endl; return;
-        }
+        cout << "Name     [" << p->getName() << "]: ";
+        getline(cin, v); v = trim(v);
+        if (!v.empty()) p->setName(v);
+
+        cout << "Quantity [" << p->getQuantity() << "]: ";
+        getline(cin, v); v = trim(v);
+        if (!v.empty()) p->setQuantity(stoi(v));
+
+        cout << "Location [" << p->getLocation() << "]: ";
+        getline(cin, v); v = trim(v);
+        if (!v.empty()) p->setLocation(v);
+
+        cout << "Price    [" << p->getPrice() << "]: ";
+        getline(cin, v); v = trim(v);
+        if (!v.empty()) p->setPrice(stod(v));
+
         cout << "Product updated." << endl;
     } catch (exception& e) {
         cout << "Error: " << e.what() << endl;
@@ -194,8 +209,10 @@ void InventorySystem::editProduct() {
 
 void InventorySystem::deleteProduct() {
     cout << "\n-- Delete Product --" << endl;
+    cout << "(Enter 0 to return to menu)" << endl;
     cout << "Product ID to delete: ";
     string id; getline(cin, id); id = trim(id);
+    if (id == "0") return;
     for (int i = 0; i < products.size(); i++) {
         if (products[i].getProductId() == id) {
             products.erase(products.begin() + i);
@@ -210,9 +227,11 @@ void InventorySystem::deleteProduct() {
 //  Manager — Employees
 // ─────────────────────────────────────────
 void InventorySystem::addEmployee() {
-    cout << "\n-- Add Employee --" << endl;
+    cout << "\n----- Add Employee -----" << endl;
+    cout << "(Enter 0 to return to menu)" << endl;
     string id, name, pw;
     cout << "Employee ID : "; getline(cin, id);   id = trim(id);
+    if (id == "0") return;
     cout << "Name        : "; getline(cin, name); name = trim(name);
     cout << "Password    : "; getline(cin, pw);   pw = trim(pw);
 
@@ -237,25 +256,31 @@ void InventorySystem::viewEmployees() {
         }
     }
     if (!found) cout << "No employees found." << endl;
+    cout << "\n(Enter 0 to return to menu): ";
+    string input; getline(cin, input);
 }
 
 void InventorySystem::editEmployee() {
     cout << "\n-- Edit Employee --" << endl;
+    cout << "(Enter 0 to return to menu)" << endl;
     cout << "Employee ID to edit: ";
     string id; getline(cin, id); id = trim(id);
+    if (id == "0") return;
     Person* p = findUserById(id);
     if (!p || p->getRole() != "EMPLOYEE") {
         cout << "Employee not found." << endl; return;
     }
-    cout << "Edit (1=Name, 2=Password): ";
-    string c; getline(cin, c);
-    if (c == "1") {
-        cout << "New Name: "; string v; getline(cin, v); p->setName(trim(v));
-    } else if (c == "2") {
-        cout << "New Password: "; string v; getline(cin, v); p->setPassword(trim(v));
-    } else {
-        cout << "Invalid choice." << endl; return;
-    }
+    cout << "(Press Enter to keep current value)" << endl;
+    string v;
+
+    cout << "Name     [" << p->getName() << "]: ";
+    getline(cin, v); v = trim(v);
+    if (!v.empty()) p->setName(v);
+
+    cout << "Password [" << p->getPassword() << "]: ";
+    getline(cin, v); v = trim(v);
+    if (!v.empty()) p->setPassword(v);
+
     cout << "Employee updated." << endl;
 }
 
@@ -264,17 +289,19 @@ void InventorySystem::editEmployee() {
 // ─────────────────────────────────────────
 void InventorySystem::createOrder() {
     cout << "\n-- Create Order --" << endl;
+    cout << "(Enter 0 to return to menu)" << endl;
     cout << "Order ID: ";
     string oid; getline(cin, oid); oid = trim(oid);
+    if (oid == "0") return;
     if (oid.empty() || orderIdExists(oid)) {
         cout << "Error: ID is empty or already exists." << endl; return;
     }
 
     Order newOrder(oid);
-    cout << "Add items (type 'done' to finish):" << endl;
     while (true) {
         cout << "  Product ID: ";
         string pid; getline(cin, pid); pid = trim(pid);
+        if (pid == "0") return;
         if (pid == "done") break;
         if (!findProductById(pid)) {
             cout << "  Product not found. Try again." << endl; continue;
@@ -284,6 +311,8 @@ void InventorySystem::createOrder() {
         try {
             newOrder.addItem(pid, stoi(qstr));
             cout << "  Item added." << endl;
+            cout << "Add items (type 'done' to finish, or '0' to cancel):" << endl;
+
         } catch (exception& e) {
             cout << "  Error: " << e.what() << endl;
         }
@@ -303,12 +332,16 @@ void InventorySystem::viewOrders() {
         orders[i].display();
     }
     cout << string(50, '-') << endl;
+    cout << "\n(Enter 0 to return to menu): ";
+    string input; getline(cin, input);
 }
 
 void InventorySystem::editOrder() {
     cout << "\n-- Edit Order --" << endl;
+    cout << "(Enter 0 to return to menu)" << endl;
     cout << "Order ID to edit: ";
     string oid; getline(cin, oid); oid = trim(oid);
+    if (oid == "0") return;
     Order* o = findOrderById(oid);
     if (!o) { cout << "Order not found." << endl; return; }
     if (o->getStatus() == COMPLETED) {
@@ -339,7 +372,18 @@ void InventorySystem::editOrder() {
 
 void InventorySystem::assignOrder() {
     cout << "\n-- Assign Order --" << endl;
+    bool found = false;
+    for (int i = 0; i < orders.size(); i++) {
+        if (orders[i].getAssignedEmployeeId().empty() && orders[i].getStatus() != COMPLETED) {
+            cout << "  Order ID: " << orders[i].getOrderId() << "  Items: " << orders[i].getItems().size() << endl;
+            found = true;
+        }
+    }
+    if (!found) { cout << "No unassigned orders." << endl; return; }
+    cout << endl;
+    cout << "(Enter 0 to return to menu)" << endl;
     cout << "Order ID    : "; string oid; getline(cin, oid); oid = trim(oid);
+    if (oid == "0") return;
     Order* o = findOrderById(oid);
     if (!o) { cout << "Order not found." << endl; return; }
     if (o->getStatus() == COMPLETED) {
@@ -400,8 +444,10 @@ void InventorySystem::viewMyOrders() {
 
 void InventorySystem::findProduct() {
     cout << "\n-- Find Product --" << endl;
+    cout << "(Enter 0 to return to menu)" << endl;
     cout << "Search by (1=ID, 2=Name): ";
     string mode; getline(cin, mode);
+    if (trim(mode) == "0") return;
     cout << "Search term: ";
     string term; getline(cin, term); term = trim(term);
 
@@ -425,8 +471,19 @@ void InventorySystem::findProduct() {
 
 void InventorySystem::completeOrder() {
     cout << "\n-- Complete Order --" << endl;
+    bool hasOrders = false;
+    for (int i = 0; i < orders.size(); i++) {
+        if (orders[i].getAssignedEmployeeId() == currentUser->getId() &&
+            orders[i].getStatus() != COMPLETED) {
+            hasOrders = true;
+            break;
+        }
+    }
+    if (!hasOrders) { cout << "No orders for you :)" << endl; return; }
+    cout << "(Enter 0 to return to menu)" << endl;
     cout << "Order ID: ";
     string oid; getline(cin, oid); oid = trim(oid);
+    if (oid == "0") return;
     Order* o = findOrderById(oid);
 
     if (!o) { cout << "Order not found." << endl; return; }
@@ -456,13 +513,16 @@ void InventorySystem::completeOrder() {
 }
 
 void InventorySystem::generateMyReport() {
-    string filename = "DATA/report_" + currentUser->getId() + ".csv";
+    string filename = "DATA/employee_orders_report.csv";
     ofstream f(filename);
     if (!f.is_open()) { cout << "Could not create file." << endl; return; }
-    f << "OrderID,Status,Items" << endl;
-    for (int i = 0; i < orders.size(); i++) {
-        if (orders[i].getAssignedEmployeeId() == currentUser->getId())
-            f << orders[i].toCSV() << endl;
+    f << "EmployeeID,EmployeeName,OrderID,Status,Items" << endl;
+    for (int i = 0; i < users.size(); i++) {
+        if (users[i]->getRole() != "EMPLOYEE") continue;
+        for (int j = 0; j < orders.size(); j++) {
+            if (orders[j].getAssignedEmployeeId() == users[i]->getId())
+                f << users[i]->getId() << "," << users[i]->getName() << "," << orders[j].toCSV() << endl;
+        }
     }
     f.close();
     cout << "Report saved to: " << filename << endl;

@@ -20,9 +20,9 @@ private:
     vector<Person*> users;
     Person*         currentUser;
 
-    string PRODUCTS_FILE = "DATA/products.csv";
-    string ORDERS_FILE   = "DATA/orders.csv";
-    string USERS_FILE    = "DATA/users.csv";
+    string PRODUCTS_FILE = "DATA/Products.csv";
+    string ORDERS_FILE   = "DATA/Orders.csv";
+    string USERS_FILE    = "DATA/Users.csv";
 
     // Helpers
     string   trim(string s);
