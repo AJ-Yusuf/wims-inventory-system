@@ -150,8 +150,10 @@ void InventorySystem::addProduct() {
     }
     try {
         products.push_back(Product(id, name, stoi(qstr), location, stod(pstr)));
+        cout << endl;
         cout << "Product added successfully." << endl;
     } catch (exception& e) {
+        cout << endl;
         cout << "Error: " << e.what() << endl;
     }
 }
@@ -174,8 +176,9 @@ void InventorySystem::viewProducts() {
 }
 
 void InventorySystem::editProduct() {
-    cout << "\n-- Edit Product --" << endl;
+    cout << "\n----- Edit Product -----" << endl;
     cout << "(Enter 0 to return to menu)" << endl;
+    cout << endl;
     cout << "Product ID to edit: ";
     string id; getline(cin, id); id = trim(id);
     if (id == "0") return;
@@ -201,6 +204,7 @@ void InventorySystem::editProduct() {
         getline(cin, v); v = trim(v);
         if (!v.empty()) p->setPrice(stod(v));
 
+        cout << endl; 
         cout << "Product updated." << endl;
     } catch (exception& e) {
         cout << "Error: " << e.what() << endl;
@@ -208,8 +212,9 @@ void InventorySystem::editProduct() {
 }
 
 void InventorySystem::deleteProduct() {
-    cout << "\n-- Delete Product --" << endl;
+    cout << "\n----- Delete Product -----" << endl;
     cout << "(Enter 0 to return to menu)" << endl;
+    cout << endl; 
     cout << "Product ID to delete: ";
     string id; getline(cin, id); id = trim(id);
     if (id == "0") return;
@@ -332,8 +337,6 @@ void InventorySystem::viewOrders() {
         orders[i].display();
     }
     cout << string(50, '-') << endl;
-    cout << "\n(Enter 0 to return to menu): ";
-    string input; getline(cin, input);
 }
 
 void InventorySystem::editOrder() {
@@ -372,15 +375,6 @@ void InventorySystem::editOrder() {
 
 void InventorySystem::assignOrder() {
     cout << "\n-- Assign Order --" << endl;
-    bool found = false;
-    for (int i = 0; i < orders.size(); i++) {
-        if (orders[i].getAssignedEmployeeId().empty() && orders[i].getStatus() != COMPLETED) {
-            cout << "  Order ID: " << orders[i].getOrderId() << "  Items: " << orders[i].getItems().size() << endl;
-            found = true;
-        }
-    }
-    if (!found) { cout << "No unassigned orders." << endl; return; }
-    cout << endl;
     cout << "(Enter 0 to return to menu)" << endl;
     cout << "Order ID    : "; string oid; getline(cin, oid); oid = trim(oid);
     if (oid == "0") return;
