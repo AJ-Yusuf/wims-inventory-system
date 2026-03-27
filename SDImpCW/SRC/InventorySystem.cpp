@@ -650,15 +650,6 @@ Product* InventorySystem::findProductById(string id) {
     return nullptr;
 }
 
-Order* InventorySystem::findOrderById(string id) {
-    for (int i = 0; i < orders.size(); i++) {
-        if (orders[i].getOrderId() == id) return &orders[i];
-    }
-    return nullptr;
-}
-
-Person* InventorySystem::findUserById(string id) {
-    for (int i = 0; i < users.size(); i++) {
         if (users[i]->getId() == id) return users[i];
     }
     return nullptr;
