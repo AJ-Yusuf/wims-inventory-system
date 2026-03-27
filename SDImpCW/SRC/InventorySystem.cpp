@@ -214,7 +214,7 @@ void InventorySystem::editProduct() {
 void InventorySystem::deleteProduct() {
     cout << "\n----- Delete Product -----" << endl;
     cout << "(Enter 0 to return to menu)" << endl;
-    cout << endl; 
+    cout << endl;
     cout << "Product ID to delete: ";
     string id; getline(cin, id); id = trim(id);
     if (id == "0") return;
