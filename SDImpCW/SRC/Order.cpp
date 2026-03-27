@@ -10,25 +10,7 @@ Order::Order(string orderId) {
 string           Order::getOrderId()            { return orderId; }
 string           Order::getAssignedEmployeeId() { return assignedEmployeeId; }
 OrderStatus      Order::getStatus()             { return status; }
-map<string, int> Order::getItems()              { return items; }
-
-string Order::getStatusString() {
-    if (status == PENDING)   return "PENDING";
-    if (status == ASSIGNED)  return "ASSIGNED";
-    if (status == COMPLETED) return "COMPLETED";
-    return "UNKNOWN";
-}
-
-void Order::addItem(string productId, int quantity) {
-    items[productId] += quantity;
-}
-
-void Order::removeItem(string productId) {
-    items.erase(productId);
-}
-
-void Order::setAssignedEmployee(string employeeId) {
-    assignedEmployeeId = employeeId;
+map<string, i
     status = ASSIGNED;
 }
 

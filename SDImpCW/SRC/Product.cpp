@@ -47,19 +47,3 @@ bool Product::reduceQuantity(int amount) {
     return true;
 }
 
-// Print to screen
-void Product::display() {
-    cout << "  ID       : " << productId << endl;
-    cout << "  Name     : " << name      << endl;
-    cout << "  Quantity : " << quantity  << endl;
-    cout << "  Location : " << location  << endl;
-    cout << "  Price    : £" << price    << endl;
-}
-
-// For saving to CSV file
-string Product::toCSV() {
-    return productId + "," + name + "," +
-           to_string(quantity) + "," +
-           location + "," +
-           to_string(price);
-}
