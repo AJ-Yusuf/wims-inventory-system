@@ -337,6 +337,8 @@ void InventorySystem::viewOrders() {
         orders[i].display();
     }
     cout << string(50, '-') << endl;
+    cout << "\n(Enter 0 to return to menu): ";
+    string input; getline(cin, input);
 }
 
 void InventorySystem::editOrder() {
@@ -375,6 +377,16 @@ void InventorySystem::editOrder() {
 
 void InventorySystem::assignOrder() {
     cout << "\n-- Assign Order --" << endl;
+    cout << "\nUnassigned Orders:" << endl;
+    bool found = false;
+    for (int i = 0; i < orders.size(); i++) {
+        if (orders[i].getAssignedEmployeeId().empty() && orders[i].getStatus() != COMPLETED) {
+            cout << "  Order ID: " << orders[i].getOrderId() << "  Items: " << orders[i].getItems().size() << endl;
+            found = true;
+        }
+    }
+    if (!found) { cout << "No unassigned orders." << endl; return; }
+    cout << endl;
     cout << "(Enter 0 to return to menu)" << endl;
     cout << "Order ID    : "; string oid; getline(cin, oid); oid = trim(oid);
     if (oid == "0") return;
