@@ -503,6 +503,8 @@ void InventorySystem::completeOrder() {
         findProductById(it->first)->reduceQuantity(it->second);
     }
     o->setStatus(COMPLETED);
+    saveProducts();
+    saveOrders();
     cout << "Order completed. Stock updated." << endl;
 }
 
